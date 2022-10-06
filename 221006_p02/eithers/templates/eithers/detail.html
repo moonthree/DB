@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+
+{% block content %}
+    <h1>DETAIL</h1>
+    <hr>
+    <h2>{{ question.title }}</h2>
+    <a href="{% url 'eithers:update' question.pk %}">UPDATE</a>
+    <form action="{% url 'eithers:delete' question.pk %}" method="POST">
+        {% csrf_token %}
+        <input type="submit" value="DELETE">
+    </form>
+    <h3>Red Team</h3>
+    <p>{{ question.issue_a }} => {{ cnt_red }}명 선택 {{red_per}}%</p>
+    <br>
+    <h3>Blue Team</h3>
+    <p>{{ question.issue_b }} => {{ cnt_blue }}명 선택 {{blue_per}}%</p>
+    <hr>
+    <a href="{% url 'eithers:index' %}">뒤로가기</a>
+    <hr>
+    <h2>댓글 작성</h2>
+    <hr>
+    <form action="{% url 'eithers:comments_create' question.pk %}" method="POST">
+        {% csrf_token %}
+        {{ comment_form.as_p }}
+        <input type="submit">
+    </form>
+    <hr>
+    <h2>댓글 목록</h2>
+    {% for comment in comments %}
+        <p>
+            {% if comment.pick == True %}
+                RED -
+            {% else %}
+                BLUE -
+            {% endif %}
+            {{ comment.content }}
+            <form action="{% url 'eithers:comments_delete' question.pk comment.pk %}" method="POST">
+                {% csrf_token %}
+                <input type="submit" value="DELETE">
+            </form>
+        </p>
+    {% empty %}
+        <p>댓글이 없어요..</p>
+    {% endfor %}
+
+{% endblock content %}
