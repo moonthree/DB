@@ -3,6 +3,7 @@
 {% block content %}
   {% if article.image %}
     <img src="{{ article.image.url }}" alt="{{ article.image }}">
+    <img src="{{ article.image_thumbnail.url }}" alt="{{ article.image_thumbnail }}">
   {% endif %}
 
   <h2>DETAIL</h2>

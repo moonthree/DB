@@ -1,5 +1,13 @@
+from imagekit.processors import Thumbnail
+from imagekit.models import ProcessedImageField, ImageSpecField
 from django.db import models
 from django.conf import settings
+
+
+
+def articles_image_path(instance, filename):
+    return f'images/{instance.user.username}/{filename}' 
+
 
 # Create your models here.
 class Article(models.Model):
@@ -7,6 +15,22 @@ class Article(models.Model):
     title = models.CharField(max_length=10)
     content = models.TextField()
     image = models.ImageField(blank=True)
+    image_thumbnail = ImageSpecField(
+        source='image',
+        processors=[Thumbnail(200,300)],
+        format='JPEG',
+        options={'quality': 80},
+    )
+    # image = models.ImageField(blank=True, upload_to='images/')
+    # image = models.ImageField(blank=True, upload_to='%Y/%m/%d/')
+    # image = models.ImageField(blank=True, upload_to=articles_image_path)
+    # image = ProcessedImageField(
+    #     blank=True,
+    #     upload_to='thumbnails/',
+    #     processors=[Thumbnail(200,300)],
+    #     format='JPEG',
+    #     options={'quality': 80},
+    # )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
